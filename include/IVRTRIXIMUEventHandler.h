@@ -24,6 +24,16 @@ namespace VRTRIX
 		Hand_Both = 4,  // Currently not supported
 	};
 
+	/** enum values of glove initialization mode */
+	enum InitMode
+	{
+		InitMode_None = 0,
+		InitMode_Normal = 1,
+		InitMode_Advanced = 2,
+		InitMode_GloveStatusChecking = 3,
+		InitMode_TrackerStatusChecking = 4,
+	};
+
 	/** enum values of joint type */
 	enum Joint {
 		Pinky_Intermediate = 0,
@@ -45,6 +55,19 @@ namespace VRTRIX
 		Joint_MAX = 16
 	};
 
+	enum HandStatus 
+	{
+		HandStatus_None,
+		HandStatus_Idle,
+		HandStatus_Running,
+		HandStatus_LowBattery,
+		HandStatus_BatteryFull,
+		HandStatus_Paired,
+		HandStatus_MagAbnormal,
+		HandStatus_TrackerConnected,
+		HandStatus_TrackerDisconnected,
+	};
+
 	/** enum values to pass into InitDataGlove to identify what kind of initialization error is arised. */
 	enum EInitError
 	{
@@ -53,7 +76,8 @@ namespace VRTRIX
 		InitError_PortBusy = 2,
 		InitError_ConnectionRefused = 3,
 		InitError_ConnectionReset = 4,
-		InitError_NoSuchDevice = 5
+		InitError_NoSuchDevice = 5,
+		InitError_InitTrackingSysFailed = 6,
 	};
 
 	/** enum values to pass into methods to identify what kind of IMU error is arised. */
@@ -63,10 +87,22 @@ namespace VRTRIX
 		IMUError_Unknown = 1,
 		IMUError_ConnectionAorted = 2,
 		IMUError_ConnectionInterrupted = 3,
-		IMUError_ConnectionBusy = 3,
+		IMUError_ConnectionBusy = 4,
 		IMUError_NotConnected = 5,
 		IMUError_TimedOut = 6,
-		IMUError_PortNotFound = 7
+		IMUError_PortNotFound = 7,
+		IMUError_PortAccessDenied = 8,
+	};
+
+	enum EConfigError
+	{
+		EConfigError_None = 0,
+		EConfigError_InvalidHand = 1,
+		EConfigError_ExeNotFound = 2,
+		EConfigError_FileOpenFailed = 3,
+		EConfigError_FileWriteFailed = 4,
+		EConfigError_FileRemoveFailed = 5,
+		EConfigError_TrackerDisconnected = 6,
 	};
 
 	struct PortInfo {
@@ -109,6 +145,10 @@ namespace VRTRIX
 		double battery;
 	};
 
+	struct HandEvent {
+		HandStatus stat;
+		HandType type;
+	};
 
 	class IVRTRIXIMUEventHandler
 	{
@@ -125,5 +165,13 @@ namespace VRTRIX
 		* @returns void
 		*/
 		virtual void OnReceivedNewPose(Pose pose, void* pUserParam) = 0;
+
+		/** OnReceivedNewEvent event call back function implement
+		*
+		* @param event: Event struct returned by the call back function
+		* @param pUserParam: user defined parameter
+		* @returns void
+		*/
+		virtual void OnReceivedNewEvent(HandEvent event, void* pUserParam) = 0;
 	};
 }
