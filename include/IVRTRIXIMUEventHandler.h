@@ -12,15 +12,13 @@
 #include <vector>
 #include <string>
 #define IMU_NUM 6
-namespace VRTRIX
-{
+namespace VRTRIX {
 	/** enum values of hand type */
-	enum HandType
-	{
-		Hand_None = 0,		   
-		Hand_Other = 1,		  
-		Hand_Left = 2,	 
-		Hand_Right = 3,		   
+	enum HandType {
+		Hand_None = 0,	   
+		Hand_Other = 1,  
+		Hand_Left = 2,
+		Hand_Right = 3, 
 		Hand_Both = 4,  // Currently not supported
 	};
 
@@ -174,4 +172,4 @@ namespace VRTRIX
 		*/
 		virtual void OnReceivedNewEvent(HandEvent event, void* pUserParam) = 0;
 	};
-}
+}// namespace VRTRIX
