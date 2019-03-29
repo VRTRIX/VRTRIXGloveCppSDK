@@ -90,6 +90,7 @@ namespace VRTRIX {
 		IMUError_TimedOut = 6,
 		IMUError_PortNotFound = 7,
 		IMUError_PortAccessDenied = 8,
+		IMUError_DataNotValid = 9,
 	};
 
 	enum EConfigError
