@@ -1,19 +1,19 @@
-//------------------------------------------------------------------------
-/**
-\file		IVRTRIXIMUEventHandler.h
-\brief		Contains the VRTRIX glove event handler base class.
-\Date       2018-8-3
-\Version    1.1
-*/
-//------------------------------------------------------------------------
+//============= Copyright (c) VRTRIX INC, All rights reserved. ================
+//
+// Purpose: Contains the VRTRIX glove event handler base class. Some useful enums
+//			and structs are also defined here.
+//
+//=============================================================================
+
 #pragma once
 #include <iostream>
 #include <iomanip>
-#include <vector>
 #include <string>
 #define IMU_NUM 6
+
 namespace VRTRIX {
-	/** enum values of hand type */
+    //! HandType enum.
+    /*! Enum values of hand type. */
 	enum HandType {
 		Hand_None = 0,	   
 		Hand_Other = 1,  
@@ -22,37 +22,62 @@ namespace VRTRIX {
 		Hand_Both = 4,  // Currently not supported
 	};
 
-	/** enum values of glove initialization mode */
+    //! Data glove initMode enum.
+    /*! Enum values of glove initialization mode. */
 	enum InitMode
 	{
 		InitMode_None = 0,
 		InitMode_Normal = 1,
 		InitMode_Advanced = 2,
-		InitMode_GloveStatusChecking = 3,
-		InitMode_TrackerStatusChecking = 4,
+		InitMode_VR = 3,
+		InitMode_GloveStatusChecking = 4,
+		InitMode_TrackerStatusChecking = 5,
 	};
 
-	/** enum values of joint type */
+
+    //! GLOVEVERSION enum.
+    /*! Enum values of data gloves hardware version. */
+	enum GLOVEVERSION {
+		DK1,
+		DK2,
+		PRO
+	};
+
+    //! Joint enum.
+    /*! Enum values of data gloves supported hand joints. */
 	enum Joint {
-		Pinky_Intermediate = 0,
-		Ring_Intermediate = 1,
-		Middle_Intermediate = 2,
-		Index_Intermediate = 3,
-		Thumb_Distal = 4,
-		Wrist_Joint = 5,
-		Pinky_Proximal = 6,
-		Ring_Proximal = 7,
-		Middle_Proximal = 8,
-		Index_Proximal = 9,
-		Thumb_Intermediate = 10,
-		Pinky_Distal = 11,
+		Wrist_Joint = 0,
+		Thumb_Proximal = 1,
+		Thumb_Intermediate = 2,
+		Thumb_Distal = 3,
+		Index_Proximal = 4,
+		Index_Intermediate = 5,
+		Index_Distal = 6,
+		Middle_Proximal = 7,
+		Middle_Intermediate = 8,
+		Middle_Distal = 9,
+		Ring_Proximal = 10,
+		Ring_Intermediate = 11,
 		Ring_Distal = 12,
-		Middle_Distal = 13,
-		Index_Distal = 14,
-		Thumb_Proximal = 15,
+		Pinky_Proximal = 13,
+		Pinky_Intermediate = 14,
+		Pinky_Distal = 15,
 		Joint_MAX = 16
 	};
 
+
+    //! Finger bend state enum.
+    /*! Enum values of data gloves finger bending state. */
+	enum VRTRIXFingerBendState {
+		VRTRIXFinger_None = 0,
+		VRTRIXFinger_BendUp = 1,
+		VRTRIXFinger_BendDown = 2,
+		VRTRIXFinger_BendUpStop = 3,
+		VRTRIXFinger_BendDownStop = 4,
+	};
+
+    //! Data gloves status enum.
+    /*! Enum values of data gloves hardware status. */
 	enum HandStatus 
 	{
 		HandStatus_None,
@@ -66,7 +91,9 @@ namespace VRTRIX {
 		HandStatus_TrackerDisconnected,
 	};
 
-	/** enum values to pass into InitDataGlove to identify what kind of initialization error is arised. */
+
+    //! Initialization error enum.
+    /*!	Enum values to pass into InitDataGlove to identify what kind of initialization error is arised.*/
 	enum EInitError
 	{
 		InitError_None = 0,
@@ -78,7 +105,8 @@ namespace VRTRIX {
 		InitError_InitTrackingSysFailed = 6,
 	};
 
-	/** enum values to pass into methods to identify what kind of IMU error is arised. */
+    //! IMU error enum.
+    /*!	Enum values to pass into methods to identify what kind of IMU error is arised. */
 	enum EIMUError
 	{
 		IMUError_None = 0,
@@ -93,6 +121,9 @@ namespace VRTRIX {
 		IMUError_DataNotValid = 9,
 	};
 
+
+    //! Configuration error enum.
+    /*!	Enum values to pass into methods to identify what kind of IMU error is arised. */
 	enum EConfigError
 	{
 		EConfigError_None = 0,
@@ -102,8 +133,27 @@ namespace VRTRIX {
 		EConfigError_FileWriteFailed = 4,
 		EConfigError_FileRemoveFailed = 5,
 		EConfigError_TrackerDisconnected = 6,
+		EConfigError_VRSysNotInitialized = 7,
 	};
 
+	
+    //! Algorithm config type enum.
+    /*!	Enum values to pass into algorithm tuning methods.*/
+	enum AlgorithmConfig
+	{
+		AlgorithmConfig_ProximalSlerpUp = 0,
+		AlgorithmConfig_ProximalSlerpDown = 1,
+		AlgorithmConfig_DistalSlerpUp = 2,
+		AlgorithmConfig_DistalSlerpDown = 3,
+		AlgorithmConfig_FingerSpcaing = 4,
+		AlgorithmConfig_FingerBendUpThreshold = 5,
+		AlgorithmConfig_FingerBendDownThreshold = 6,
+		AlgorithmConfig_ThumbOffset = 7,
+		AlgorithmConfig_FinalFingerSpacing = 8,
+		AlgorithmConfig_Max = 9,
+	};
+
+	//! Serial port information need for data streaming.
 	struct PortInfo {
 		/*! Address of the serial port (this can be passed to the constructor of Serial). */
 		std::string port;
@@ -124,31 +174,55 @@ namespace VRTRIX {
 		HandType type;
 	};
 
-
+	//! Quaternion data structure used in C++ API.
 	struct VRTRIXQuaternion_t
 	{
-		float qx, qy, qz, qw;
+		float qx; //!< x component in quaternion
+		float qy; //!< y component in quaternion
+		float qz; //!< z component in quaternion
+		float qw; //!< w component in quaternion
 		friend std::ostream& operator << (std::ostream &o, const VRTRIXQuaternion_t a) {
 			o << "[" << std::setiosflags(std::ios::fixed) << std::setprecision(4)
 				<< a.qx << "," << a.qy << "," << a.qz << "," << a.qw  << "]" << std::endl;
 			return o;
-		}
+		}	//!< member operator override
+	};
+	
+	//! 3D Vector data structure used in C++ API.
+	struct VRTRIXVector_t
+	{
+		float x; //!< x component in vector
+		float y; //!< y component in vector
+		float z; //!< z component in vector
+		friend std::ostream& operator << (std::ostream &o, const VRTRIXVector_t a) {
+			o << "[" << std::setiosflags(std::ios::fixed) << std::setprecision(4)
+				<< a.x << "," << a.y << "," << a.z  << "]" << std::endl;
+			return o;
+		}	//!< member operator override
 	};
 
+
+	//! Glove pose data structure used in C++ API.
 	struct Pose
 	{
-		VRTRIXQuaternion_t imuData[Joint_MAX];
-		HandType type;
-		int calScore[IMU_NUM];
-		int radioStrength;
-		double battery;
+		VRTRIXQuaternion_t imuData[Joint_MAX]; //!< IMU data in quaternion (Global coordinate)
+		HandType type; //!< Glove hand type
+		int calScore[IMU_NUM]; //!< IMU calibration score. Lower score means better calibration results.
+		int radioStrength; //!< Glove wireless radio strength
+		double battery; //!< Glove battery percentage
 	};
 
+
+	//! Glove hand event data structure used in C++ API.
 	struct HandEvent {
-		HandStatus stat;
-		HandType type;
+		HandStatus stat; //!< Glove hardware status
+		HandType type;	//!< Glove hand type
 	};
 
+    //!  VRTRIX IMU event handler class. 
+    /*!
+        Interface class that define the function header for handling the IMU event including pose data receiving and other events.
+    */
 	class IVRTRIXIMUEventHandler
 	{
 	public:
