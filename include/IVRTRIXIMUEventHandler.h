@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <vector>
 
 #define IMU_NUM 6
 #define BUF_SIZE 100
@@ -62,8 +63,7 @@ namespace VRTRIX {
 		Pinky_Proximal,
 		Pinky_Intermediate,
 		Pinky_Distal,
-		Wrist_Joint_Double,
-		Joint_MAX = 17
+		Joint_MAX = 16
 	};
 
 
@@ -89,6 +89,7 @@ namespace VRTRIX {
 		HandStatus_BatteryFull,
 		HandStatus_Paired,
 		HandStatus_MagAbnormal,
+		HandStatus_Calibrated,
 	};
 
 
@@ -202,11 +203,18 @@ namespace VRTRIX {
 		double battery; //!< Glove battery percentage
 	};
 
+	//! Saved current alignment params.
+	struct AlignmentParameter {
+		VRTRIXQuaternion_t IMUAlignmentYaw[Joint_MAX]; //!<Finger yaw alignment param
+		VRTRIXQuaternion_t IMUAlignmentTPosePitch[Joint_MAX]; //!<Finger t-pose pitch alignment param
+		VRTRIXQuaternion_t IMUAlignmentOKPosePitch[Joint_MAX]; //!<Finger ok-pose pitch alignment param
+	};
 
 	//! Glove hand event data structure used in C++ API.
 	struct HandEvent {
 		HandStatus stat; //!< Glove hardware status
 		HandType type;	//!< Glove hand type
+		AlignmentParameter param; //!< Glove calibration parameters
 	};
 
 	//!  VRTRIX IMU event handler class. 
