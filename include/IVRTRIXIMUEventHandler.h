@@ -91,6 +91,9 @@ namespace VRTRIX {
 		HandStatus_InsufficientDataPacket,
 		HandStatus_ErrorDataPacket,
 		HandStatus_NewChannelSelected,
+		HandStatus_Pairing,
+		HandStatus_RSSIScanning,
+		HandStatus_PortNotOpened,
 		HandStatus_LowBattery,
 		HandStatus_BatteryFull,
 		HandStatus_Paired,
@@ -116,7 +119,7 @@ namespace VRTRIX {
 	{
 		IMUError_None,
 		IMUError_Unknown,
-		IMUError_ConnectionAorted,
+		IMUError_ConnectionAborted,
 		IMUError_ConnectionInterrupted,
 		IMUError_ConnectionBusy,
 		IMUError_NotConnected,
