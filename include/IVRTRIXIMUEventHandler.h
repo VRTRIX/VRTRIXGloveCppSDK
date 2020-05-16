@@ -98,6 +98,8 @@ namespace VRTRIX {
 		HandStatus_BatteryFull,
 		HandStatus_Paired,
 		HandStatus_MagAbnormal,
+		HandStatus_PairingTimeOut,
+		HandStatus_PairingException,
 	};
 
 
