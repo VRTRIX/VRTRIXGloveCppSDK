@@ -10,7 +10,6 @@
 #include <iomanip>
 #include <string>
 
-#define IMU_NUM 6
 #define BUF_SIZE 100
 
 namespace VRTRIX {
@@ -212,7 +211,7 @@ namespace VRTRIX {
 		HandType type; //!< Glove hand type
 		int dataRate; //!< Glove data rate (Hz)
 		int channel; //!< Glove radio channel (1-99)
-		int calScore[IMU_NUM]; //!< IMU calibration score. Lower score means better calibration results.
+		int calScore[6]; //!< IMU calibration score. Lower score means better calibration results.
 		int radioStrength; //!< Glove wireless radio strength
 		double battery; //!< Glove battery percentage
 	};
