@@ -9,24 +9,23 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <vector>
 
 #define IMU_NUM 6
 #define BUF_SIZE 100
 
 namespace VRTRIX {
-	//! HandType enum.
-	/*! Enum values of hand type. */
+    //! HandType enum.
+    /*! Enum values of hand type. */
 	enum HandType {
-		Hand_None,
-		Hand_Other,
+		Hand_None,	   
+		Hand_Other,  
 		Hand_Left,
-		Hand_Right,
+		Hand_Right, 
 		Hand_Both,  // Currently not supported
 	};
 
-	//! Data glove initMode enum.
-	/*! Enum values of glove initialization mode. */
+    //! Data glove initMode enum.
+    /*! Enum values of glove initialization mode. */
 	enum InitMode
 	{
 		InitMode_None,
@@ -36,16 +35,19 @@ namespace VRTRIX {
 	};
 
 
-	//! GLOVEVERSION enum.
-	/*! Enum values of data gloves hardware version. */
+    //! GLOVEVERSION enum.
+    /*! Enum values of data gloves hardware version. */
 	enum GLOVEVERSION {
+		DK1,
+		DK2,
+		PRO,
 		PRO7,
 		PRO11,
 		PRO12
 	};
 
-	//! Joint enum.
-	/*! Enum values of data gloves supported hand joints. */
+    //! Joint enum.
+    /*! Enum values of data gloves supported hand joints. */
 	enum Joint {
 		Wrist_Joint,
 		Thumb_Proximal,
@@ -67,8 +69,8 @@ namespace VRTRIX {
 	};
 
 
-	//! Finger bend state enum.
-	/*! Enum values of data gloves finger bending state. */
+    //! Finger bend state enum.
+    /*! Enum values of data gloves finger bending state. */
 	enum VRTRIXFingerBendState {
 		VRTRIXFinger_None,
 		VRTRIXFinger_BendUp,
@@ -77,9 +79,9 @@ namespace VRTRIX {
 		VRTRIXFinger_BendDownStop,
 	};
 
-	//! Data gloves status enum.
-	/*! Enum values of data gloves hardware status. */
-	enum HandStatus
+    //! Data gloves status enum.
+    /*! Enum values of data gloves hardware status. */
+	enum HandStatus 
 	{
 		HandStatus_None,
 		HandStatus_Connected,
@@ -88,16 +90,25 @@ namespace VRTRIX {
 		HandStatus_PortClosed,
 		HandStatus_PortInterrupted,
 		HandStatus_ChannelHopping,
+		HandStatus_SetRadioLimit,
+		HandStatus_InsufficientDataPacket,
+		HandStatus_ErrorDataPacket,
+		HandStatus_NewChannelSelected,
+		HandStatus_Pairing,
+		HandStatus_RSSIScanning,
+		HandStatus_PortNotOpened,
 		HandStatus_LowBattery,
 		HandStatus_BatteryFull,
 		HandStatus_Paired,
 		HandStatus_MagAbnormal,
+		HandStatus_PairingTimeOut,
+		HandStatus_PairingException,
 		HandStatus_Calibrated,
 	};
 
 
-	//! Initialization error enum.
-	/*!	Enum values to pass into InitDataGlove to identify what kind of initialization error is arised.*/
+    //! Initialization error enum.
+    /*!	Enum values to pass into InitDataGlove to identify what kind of initialization error is arised.*/
 	enum EInitError
 	{
 		InitError_None,
@@ -108,8 +119,8 @@ namespace VRTRIX {
 		InitError_NoSuchDevice,
 	};
 
-	//! IMU error enum.
-	/*!	Enum values to pass into methods to identify what kind of IMU error is arised. */
+    //! IMU error enum.
+    /*!	Enum values to pass into methods to identify what kind of IMU error is arised. */
 	enum EIMUError
 	{
 		IMUError_None,
@@ -124,9 +135,9 @@ namespace VRTRIX {
 		IMUError_DataNotValid,
 	};
 
-
-	//! Algorithm config type enum.
-	/*!	Enum values to pass into algorithm tuning methods.*/
+	
+    //! Algorithm config type enum.
+    /*!	Enum values to pass into algorithm tuning methods.*/
 	enum AlgorithmConfig
 	{
 		AlgorithmConfig_ProximalSlerpUp,
@@ -175,11 +186,11 @@ namespace VRTRIX {
 		float qw; //!< w component in quaternion
 		friend std::ostream& operator << (std::ostream &o, const VRTRIXQuaternion_t a) {
 			o << "[" << std::setiosflags(std::ios::fixed) << std::setprecision(4)
-				<< a.qx << "," << a.qy << "," << a.qz << "," << a.qw << "]" << std::endl;
+				<< a.qx << "," << a.qy << "," << a.qz << "," << a.qw  << "]" << std::endl;
 			return o;
 		}	//!< member operator override
 	};
-
+	
 	//! 3D Vector data structure used in C++ API.
 	struct VRTRIXVector_t
 	{
@@ -188,7 +199,7 @@ namespace VRTRIX {
 		float z; //!< z component in vector
 		friend std::ostream& operator << (std::ostream &o, const VRTRIXVector_t a) {
 			o << "[" << std::setiosflags(std::ios::fixed) << std::setprecision(4)
-				<< a.x << "," << a.y << "," << a.z << "]" << std::endl;
+				<< a.x << "," << a.y << "," << a.z  << "]" << std::endl;
 			return o;
 		}	//!< member operator override
 	};
@@ -218,12 +229,18 @@ namespace VRTRIX {
 		HandStatus stat; //!< Glove hardware status
 		HandType type;	//!< Glove hand type
 		AlignmentParameter param; //!< Glove calibration parameters
+		int dataRate; //!< Glove data rate (Hz)
+		int channel; //!< Glove radio channel (1-99)
+		int upperBound; //!< Glove radio channel upperBound(1-99)
+		int lowerBound; //!< Glove radio channel lowerBound(1-99)
+		int byteReceived; //!< Glove byte received last 500ms
+		int errorCount;	//!< Glove data error count during transmission
 	};
 
-	//!  VRTRIX IMU event handler class. 
-	/*!
-		Interface class that define the function header for handling the IMU event including pose data receiving and other events.
-	*/
+    //!  VRTRIX IMU event handler class. 
+    /*!
+        Interface class that define the function header for handling the IMU event including pose data receiving and other events.
+    */
 	class IVRTRIXIMUEventHandler
 	{
 	public:
