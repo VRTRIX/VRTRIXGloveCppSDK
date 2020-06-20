@@ -9,8 +9,10 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <vector>
 
 #define BUF_SIZE 100
+#define MAX_GLOVE_SUPPORTED 12
 
 namespace VRTRIX {
     //! HandType enum.
@@ -130,6 +132,7 @@ namespace VRTRIX {
 		IMUError_NotConnected,
 		IMUError_TimedOut,
 		IMUError_PortNotFound,
+		IMUError_ExceedMaxGloveSupported,
 		IMUError_PortAccessDenied,
 		IMUError_DataNotValid,
 	};
@@ -156,9 +159,9 @@ namespace VRTRIX {
 	struct PortInfo {
 		/*! Baud Rate */
 		int baud_rate;
-
+	
 		/*! Index number of data glove ports */
-		int index = 16;
+		int index;
 
 		/*! Hand Type */
 		HandType type;
