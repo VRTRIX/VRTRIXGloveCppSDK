@@ -25,6 +25,14 @@ namespace VRTRIX {
 		Hand_Both,  // Currently not supported
 	};
 
+	//! Device Type Enum
+	/*  Enum values of device type. */
+	enum DeviceType {
+		Device_Unknown,
+		Device_USBDongle,
+		Device_Glove
+	};
+
     //! Data glove initMode enum.
     /*! Enum values of glove initialization mode. */
 	enum InitMode
@@ -105,6 +113,8 @@ namespace VRTRIX {
 		HandStatus_PairingTimeOut,
 		HandStatus_PairingException,
 		HandStatus_Calibrated,
+		HandStatus_UpdateDongleFirmwarePrepared,
+		HandStatus_UpdateGloveFirmwarePrepared,
 	};
 
 
@@ -135,6 +145,7 @@ namespace VRTRIX {
 		IMUError_ExceedMaxGloveSupported,
 		IMUError_PortAccessDenied,
 		IMUError_DataNotValid,
+		IMUError_FirmwareUpgradeFailed,
 	};
 
 	
