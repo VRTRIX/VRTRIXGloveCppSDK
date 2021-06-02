@@ -11,9 +11,6 @@
 #include <string>
 #include <vector>
 
-#define BUF_SIZE 100
-#define MAX_GLOVE_SUPPORTED 12
-
 namespace VRTRIX {
     //! HandType enum.
     /*! Enum values of hand type. */
@@ -25,22 +22,13 @@ namespace VRTRIX {
 		Hand_Both,  // Currently not supported
 	};
 
-	//! Device Type Enum
-	/*  Enum values of device type. */
-	enum DeviceType {
-		Device_Unknown,
-		Device_USBDongle,
-		Device_Glove
-	};
-
     //! Data glove initMode enum.
     /*! Enum values of glove initialization mode. */
 	enum InitMode
 	{
 		InitMode_None,
 		InitMode_Normal,
-		InitMode_Advanced,
-		InitMode_GloveStatusChecking,
+		InitMode_Advanced
 	};
 
 
@@ -98,23 +86,10 @@ namespace VRTRIX {
 		HandStatus_PortOpened,
 		HandStatus_PortClosed,
 		HandStatus_PortInterrupted,
-		HandStatus_ChannelHopping,
-		HandStatus_SetRadioLimit,
 		HandStatus_InsufficientDataPacket,
 		HandStatus_ErrorDataPacket,
-		HandStatus_NewChannelSelected,
-		HandStatus_Pairing,
-		HandStatus_RSSIScanning,
 		HandStatus_PortNotOpened,
-		HandStatus_LowBattery,
-		HandStatus_BatteryFull,
-		HandStatus_Paired,
-		HandStatus_MagAbnormal,
-		HandStatus_PairingTimeOut,
-		HandStatus_PairingException,
 		HandStatus_Calibrated,
-		HandStatus_UpdateDongleFirmwarePrepared,
-		HandStatus_UpdateGloveFirmwarePrepared,
 	};
 
 
@@ -145,7 +120,6 @@ namespace VRTRIX {
 		IMUError_ExceedMaxGloveSupported,
 		IMUError_PortAccessDenied,
 		IMUError_DataNotValid,
-		IMUError_FirmwareUpgradeFailed,
 	};
 
 	
@@ -157,7 +131,7 @@ namespace VRTRIX {
 		AlgorithmConfig_ProximalSlerpDown,
 		AlgorithmConfig_DistalSlerpUp,
 		AlgorithmConfig_DistalSlerpDown,
-		AlgorithmConfig_FingerSpacing,
+		AlgorithmConfig_FingerSpcaing,
 		AlgorithmConfig_FingerBendUpThreshold,
 		AlgorithmConfig_FingerBendDownThreshold,
 		AlgorithmConfig_ThumbOffset,
@@ -167,27 +141,12 @@ namespace VRTRIX {
 	};
 
 	//! Serial port information need for data streaming.
-	struct PortInfo {
-		/*! Baud Rate */
-		int baud_rate;
-	
+	struct PortInfo {	
 		/*! Index number of data glove ports */
 		int index;
 
 		/*! Hand Type */
 		HandType type;
-
-		/*! Address of the serial port (this can be passed to the constructor of Serial). */
-		char port[BUF_SIZE];
-
-		/*! Human readable description of serial device if available. */
-		char description[BUF_SIZE];
-
-		/*! Hardware ID (e.g. VID:PID of USB serial devices) or "n/a" if not available. */
-		char hardware_id[BUF_SIZE];
-
-		/*! Instance ID */
-		char instance_id[BUF_SIZE];
 	};
 
 	//! Quaternion data structure used in C++ API.
@@ -224,10 +183,7 @@ namespace VRTRIX {
 		VRTRIXQuaternion_t imuData[Joint_MAX]; //!< IMU data in quaternion (Global coordinate)
 		HandType type; //!< Glove hand type
 		int dataRate; //!< Glove data rate (Hz)
-		int channel; //!< Glove radio channel (1-99)
-		int calScore[6]; //!< IMU calibration score. Lower score means better calibration results.
-		int radioStrength; //!< Glove wireless radio strength
-		double battery; //!< Glove battery percentage
+		bool buttonState; //!< Glove Button State
 	};
 
 	//! Saved current alignment params.
@@ -243,9 +199,6 @@ namespace VRTRIX {
 		HandType type;	//!< Glove hand type
 		AlignmentParameter param; //!< Glove calibration parameters
 		int dataRate; //!< Glove data rate (Hz)
-		int channel; //!< Glove radio channel (1-99)
-		int upperBound; //!< Glove radio channel upperBound(1-99)
-		int lowerBound; //!< Glove radio channel lowerBound(1-99)
 		int byteReceived; //!< Glove byte received last 500ms
 		int errorCount;	//!< Glove data error count during transmission
 	};
