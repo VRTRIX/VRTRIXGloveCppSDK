@@ -1,7 +1,7 @@
 # 功能介绍 [English][english]
 
 <p align="center">
-  <img src="https://github.com/VRTRIX/VRTRIXGlove_Unity3D_SDK/blob/master/docs/img/digital_glove.png"/>
+  <img src="https://github.com/VRTRIX/VRTRIXGlove_Unity3D_SDK/blob/client/docs/img/digital_glove.png"/>
 </p>
 
 本代码仓库包含VRTRIX 数据手套C++ SDK，支持通过C++ API 对手套数据流进行获取，同时读取其他一些手套硬件状态和参数，也支持对手套震动模块的控制。
